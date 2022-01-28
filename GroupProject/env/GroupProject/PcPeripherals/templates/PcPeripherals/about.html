@@ -1,0 +1,27 @@
+{% extends 'PcPeripherals/base.html' %}
+{% load static %}
+
+{% block title %}About{% endblock title %}
+
+{% block content %}
+    <h3 class="text-center">About Us</h3>
+
+	<div class="row mt-5">
+        <div class="media">
+            <img src="{% static '/images/about.jpg' %}" alt="About Us" class="align-self center mr-3" width="250" height="250">
+            <div class="media-body">
+                <p>
+                    
+Our mission is to give our customers high quality computer peripherals in the most competitive prices. We strive for excellent customer experience and our
+works is directly linked to our customers' needs.
+
+                </p>
+                <p class="mb-0">
+                    This company is the result of the common passion between five developers that saw an absence in the market and came together to unite their skillset and produce 
+something necessary and useful for everyone, because we ourselves are customers too.
+We partner with the top technology industries and their warehouses in order to provide the latest technology products as soon as they hit the market.
+                </p>
+            </div>
+        </div>
+	</div>
+{% endblock %}

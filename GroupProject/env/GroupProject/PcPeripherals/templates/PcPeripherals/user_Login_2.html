@@ -1,0 +1,27 @@
+{% extends 'PcPeripherals/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+Login
+{% endblock title %}
+
+{% block content %}
+<h2 class="URH">Log in</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <br>
+    {{ form|crispy }}
+
+    {% if invalid %}
+        <div>{{ invalid }}</div>
+    {% elif empty_password %}
+        <div>{{ empty_password }}</div>
+    {% elif empty_username %}
+        <div>{{ empty_username }}</div>
+    {% endif %}
+    <br>
+
+    <button type="submit" class="btn btn-primary">Log in</button>
+</form>
+{% endblock content %}

@@ -1,0 +1,182 @@
+{% extends 'PcPeripherals/base.html' %}
+{% load static %}
+
+{% block title %}Checkout{% endblock title %}
+
+{% comment %} Template for the checkout {% endcomment %}
+{% comment %} Checkout form - Shipping information {% endcomment %}
+
+{% block content %}
+     <div class="row mt-5">
+		<div class="col-lg-6">
+			<div class="box-element" id="form-wrapper">
+				<form id="form">
+					<div id="user-info">
+						<div class="form-field">
+							<input class="form-control" type="text" name="first_name" placeholder="First Name.." required>
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="last_name" placeholder="Last Name.." required>
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="email" name="email" placeholder="Email.." required>
+						</div>
+					</div>
+					
+					<div id="shipping-info">
+						<hr>
+						<p>Shipping Information:</p>
+						<hr>
+						<div class="form-field">
+							<input class="form-control" type="text" name="address" placeholder="Address..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="city" placeholder="City..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="state" placeholder="State..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="country" placeholder="Country..">
+						</div>
+					</div>
+
+					<hr>
+					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+				</form>
+			</div>
+
+			<br>
+			<div class="box-element hidden" id="payment-info">
+				<small>Paypal Options</small>
+				<div id="paypal-button-container"></div>
+			</div>
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-element">
+				<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+				<hr><h5>Order Summary</h5><hr>
+				{% for item in items %}
+                    <div class="cart-row">
+                        <div style="flex: 2;"><img class="row-image" src="{{ item.product.imageURL }}"></div>
+                        <div style="flex: 2;"><p>{{ item.product.name }}</p></div>
+                        <div style="flex: 1;"><p>${{ item.product.price|floatformat:2 }}</p></div>
+                        <div style="flex: 1;"><p>x{{ item.quantity }}</p></div>
+                    </div>
+				{% endfor %}
+				<h5>Items: {{ order.get_cart_items }}</h5>
+				<h5>Total: ${{ order.get_cart_total|floatformat:2 }}</h5>
+			</div>
+		</div>
+	</div>
+
+	<!--  Script  -->
+	<script src="https://www.paypal.com/sdk/js?client-id=AT6Zk7gW2FluuSdkfS7Jp2uJWjKmM4lPALuoLU3gqaOA-PsgCuorHkWDdQl_IBWaLvypaj5UVQhaXDlV&currency=USD&disable-funding=credit"></script>
+
+    <script>
+		var total = '{{order.get_cart_total}}'
+        // Render the PayPal button into #paypal-button-container
+		
+        paypal.Buttons({ 
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: parseFloat(total).toFixed(2)
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Successful capture! For demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    var transaction = orderData.purchase_units[0].payments.captures[0];
+					alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nOrder Completed!')
+					submitFormData();
+                    
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
+
+	<script type="text/javascript">
+		var total = '{{order.get_cart_total|floatformat:2}}'
+		var form = document.getElementById('form')
+		
+		//Hide fields
+		form.addEventListener('submit', function(e){
+			e.preventDefault()
+			console.log('Form Submitted...')
+			document.getElementById('form-button').classList.add("hidden");
+			document.getElementById('payment-info').classList.remove("hidden");
+		})
+
+		function submitFormData(){
+			console.log('Payment button clicked')
+		
+			var userFormData = {
+				'first_name':null,
+				'last_name':null,
+				'email':null,
+				'total':total,
+			}
+
+			var shippingInfo = {
+				'address':null,
+				'city':null,
+				'state':null,
+				'zipcode':null,
+			}
+
+
+			shippingInfo.address = form.address.value
+			shippingInfo.city = form.city.value
+			shippingInfo.state = form.state.value
+			shippingInfo.zipcode = form.zipcode.value
+	
+
+			if (user == 'AnonymousUser'){
+				userFormData.first_name = form.first_name.value
+				userFormData.last_name = form.last_name.value
+				userFormData.email = form.email.value
+			}
+
+			console.log('Shipping Info:', shippingInfo)
+			console.log('User Info:', userFormData)
+
+			//create a post call and send the data to the backend
+			var url = "/pcp/process_order/" 
+
+			fetch(url, {                      //post request 
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json',
+					'X-CSRFToken':csrftoken, //inlcude csrftoken
+				}, 
+				//Creation of dictionary that sends the data of user to --> data = json.loads(request.body) (on views.py)
+				body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo}), //nesting  user information and shipping data. 
+				
+			})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log('Success:', data);
+				alert('Transaction completed');  
+
+				cart = {}
+				document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
+				window.location.href = "/pcp/home/" 
+
+				})
+		}
+	</script>
+{% endblock %}
+

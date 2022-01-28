@@ -1,0 +1,37 @@
+{% extends 'PcPeripherals/base.html' %}
+
+{% block title %}Contact{% endblock title %}
+
+{% block content %}
+    <h3 class="text-center">Contact</h3>
+
+    <div class="column-d-9 column-t-12 column-m-12">
+        <div id="box_contact">
+            <div id="box_formas">
+                <form id="form1" name="form1" action="mailto:info@pcb.com" method="post">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name">
+
+                    <label for="email">E-mail</label>
+                    <input type="text" id="email" name="email" placeholder="Enter your e-mail">
+                    
+                    <label for="comments">Comments</label>
+                    <textarea id="comments" name="comments" placeholder="Enter your comments" rows="5"></textarea>
+
+                    <label for="country">Country</label>
+                    <select id="country" name="country">
+                        <option value="none">Select country</option>
+                        <option value="italy">Italy</option>
+                        <option value="spain">Spain</option>
+                        <option value="portugal">Portugal</option>
+                        <option value="greece">Greece</option>
+                        <option value="france">France</option>
+                        <option value="sweden">Sweden</option>
+                        <option value="norway">Norway</option>
+                    </select>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

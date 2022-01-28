@@ -1,0 +1,44 @@
+{% load static %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="{% url 'home' %}">PcP</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon">
+            <i class="fa fa-bars"></i>
+        </span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated and not user.is_superuser %}
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">My Profile</a></li>
+
+            {% elif not user.is_authenticated and not user.is_superuser%}
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a></li>
+            {% endif %}
+        </ul>
+        <ul class="navbar-nav float-right">
+            {% if user.is_authenticated and not user.is_superuser%}
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'user_logout' %}active{% endif %}" href="{% url 'user_logout' %}">Logout</a></li>
+            {% elif not user.is_authenticated and not user.is_superuser%}
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'user_login' %}active{% endif %}" href="{% url 'user_login' %}">Login</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'user_registration' %}active{% endif %}" href="{% url 'user_registration' %}">Sign Up</a></li>
+            {% endif %}
+        </ul>
+        <div class="form-inline my-2 my-lg-0">
+            <a href="{% url 'cart' %}">
+                {% if not user.is_superuser%}
+                <img id="cart-icon" src="{% static '/images/cart.png' %}">
+                <p id="cart-total">{{ cartItems }}</p>
+                {% endif %}
+                
+            </a>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,28 @@
+/* Modal css */
+.my-img a {
+    display: inline-block;
+    margin: 10px;
+    border: 2px solid #CCC;
+}
+.my-img a:hover {
+    border: 2px solid #45AFFF;
+}    
+.modal-lg {
+    width: 100%;
+    
+}
+
+.modal-body {
+    overflow: auto;
+    max-height: auto;
+}
+
+.modal-body img {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 100%;
+    height: auto;
+
+}
+
+

@@ -1,0 +1,17 @@
+<!-- Navtabs -->
+<div class="container">
+    <h1 class="text-center ml-4">Welcome to PcP Home Page  {{ username }}</h1>
+    <p class="text-center mb-5">
+        Everything you need, we got it.
+    </p> 
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'home' %}active{% endif %}" href="{% url 'home' %}">All</a></li>
+    <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'monitor' %}active{% endif %}" href="{% url 'monitor' %}">Monitors</a></li>
+    <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'keyboard' %}active{% endif %}" href="{% url 'keyboard' %}">Keyboards</a></li>
+    <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'mouse' %}active{% endif %}" href="{% url 'mouse' %}">Mouses</a></li>
+
+    <!-- Search Bar -->
+    <input type="search" id="myInput" title="Type in a product" onkeyup="search()" placeholder="Search..."> 
+</ul>

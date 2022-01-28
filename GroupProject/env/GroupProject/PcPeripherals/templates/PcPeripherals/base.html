@@ -1,0 +1,112 @@
+<!--  This is Base.html . It's a file with blocks from which other templates extends -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>PcP - {% block title %}{% endblock %}</title>  <!--  title block  -->
+        <meta charset='UTF-8'>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, Chorme=1">
+
+        <!-- Bootstap 4.4.1 -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        
+        <!--  link with css for project  -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel='stylesheet' type='text/css' href="{% static 'css/chat.css' %}">
+        <link rel='stylesheet' type='text/css' href="{% static 'css/PcPcss.css' %}">
+        <link rel='stylesheet' type='text/css' href="{% static 'css/modals.css' %}">
+        
+    </head>
+    <body>  
+        
+        {% include "includes/navbar.html" %}
+
+        <!--  body's blocks  -->
+        <main role="main">
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+
+           {% include "includes/chat.html"%} 
+        </main>
+
+        {% include "includes/footer.html" %}
+
+        <!--  scripts import  -->
+	    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+	    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/navbar.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/chat.js' %}"></script>
+	    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/response.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/modals.js' %}"></script>
+        
+        <!--  script  -->
+        <script type="text/javascript">
+
+
+            var user = '{{request.user}}' 
+
+            // Create Token for security 
+            function getToken(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            var csrftoken = getToken('csrftoken');
+
+            function getCookie(name) {
+                /* 
+                    Split cookie string and get all individual 
+                    name=value pairs in an array
+                */
+                var cookieArr = document.cookie.split(';');
+
+                // Loop through the array elements
+                for(var i = 0; i < cookieArr.length; i++) {
+                    var cookiePair = cookieArr[i].split('=');
+
+                    /* 
+                        Removing whitespace at the beginning of the cookie name
+                        and compare it with the given string 
+                    */
+                    if(name == cookiePair[0].trim()) {
+                        // Decode the cookie value and return
+                        return decodeURIComponent(cookiePair[1]);
+                    }
+                }
+
+                // Return null if not found
+                return null;
+            }
+            
+            //search for the cookie named cart
+            var cart = JSON.parse(getCookie('cart')); 
+
+            if (cart == undefined){
+                cart = {};
+                console.log('Cart Created!', cart);
+
+                // set domain so we have the same cookie on every page
+                document.cookie ='cart=' + JSON.stringify(cart) + ';domain=;path=/';
+            }
+
+            console.log('Cart:', cart);
+        </script>
+    </body>
+</html>

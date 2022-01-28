@@ -1,0 +1,22 @@
+{% extends 'PcPeripherals/base.html' %}
+
+{% block title %}Home Page{% endblock title %}
+
+{% block content %}
+    {% include "includes/navtabs.html" %}
+
+	<div class="row" id="myRow">
+		{% for monitor in monitors %}
+            <div class="col-lg-4">
+                <img class="thumbnail" src="{{ monitor.imageURL }}">
+                <div class="box-element product">
+                    <h6><strong>{{ monitor.name }}</strong></h6>
+                    <hr>
+                    <button data-product={{monitor.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                    <h4 style="display: inline-block;"><strong>${{monitor.price}}</strong></h4>
+                </div>
+            </div>
+		{% endfor %}
+	</div>
+
+{% endblock %}

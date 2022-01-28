@@ -1,0 +1,22 @@
+{% extends 'PcPeripherals/base.html' %}
+
+{% block title %}Home Page{% endblock title %}
+
+{% block content %}
+    {% include "includes/navtabs.html" %}
+
+	<div class="row" id="myRow">
+		{% for keyboard in keyboards %}
+            <div class="col-lg-4">
+                <img class="thumbnail" src="{{ keyboard.imageURL }}">
+                <div class="box-element product">
+                    <h6><strong>{{ keyboard.name }}</strong></h6>
+                    <hr>
+                    <button data-product={{keyboard.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                    <h4 style="display: inline-block;"><strong>${{keyboard.price}}</strong></h4>
+                </div>
+            </div>
+		{% endfor %}
+	</div>
+
+{% endblock %}
